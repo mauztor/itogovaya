@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Система учёта расходов и доходов текущего и капитального ремонта жилой недвижимости</title>
+</head>
+<body>
+    <h1>Система учёта расходов и доходов текущего и капитального ремонта жилой недвижимости</h1>
+    <p>Текущий баланс: {{ balance }}</p>
+    <a href="{{ url_for('categories') }}">Категории</a><br>
+    <a href="{{ url_for('add_operation') }}">Добавить операцию</a><br>
+    <a href="{{ url_for('view_operations') }}">Просмотреть операции</a><br>
+    <a href="{{ url_for('show_analysis') }}">Анализ данных</a>
+    <h3>Импорт/экспорт операций</h3>
+    <form method="POST" action="{{ url_for('load_operations_csv') }}" enctype="multipart/form-data">
+        <label>Загрузить операции из CSV: <input type="file" name="file" accept=".csv" required></label>
+        <button type="submit">Загрузить</button>
+    </form>
+    <form method="GET" action="{{ url_for('export_operations_csv') }}">
+        <button type="submit">Выгрузить операции в CSV</button>
+    </form>
+</body>
+</html>

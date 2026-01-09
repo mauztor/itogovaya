@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить операцию</title>
+</head>
+<body>
+    <h1>Добавить операцию</h1>
+    <form method="POST">
+        <label>Сумма: <input type="number" name="amount" required></label><br>
+        <label>Категория:
+            <select name="category_id" required>
+                <optgroup label="Доходы">
+                    {% for category in income_categories %}
+                        <option value="{{ category[0] }}">{{ category[1] }}</option>
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Расходы">
+                    {% for category in expense_categories %}
+                        <option value="{{ category[0] }}">{{ category[1] }}</option>
+                    {% endfor %}
+                </optgroup>
+            </select>
+        </label><br>
+        <label>Дата: <input type="datetime-local" name="date" required></label><br>
+        <label>Тип операции:
+            <select name="operation_type">
+                <option value="доход">Доход</option>
+                <option value="расход">Расход</option>
+            </select>
+        </label><br>
+        <label>Комментарий: <input type="text" name="comment"></label><br>
+        <button type="submit">Добавить</button>
+    </form>
+</body>
+</html>

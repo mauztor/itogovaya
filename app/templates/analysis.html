@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Анализ данных</title>
+</head>
+<body>
+    <h1>Анализ финансовых данных</h1>
+
+    <h2>Доходы и расходы по времени</h2>
+    <img src="{{ url_for('static', filename='income_vs_expenses.png') }}" alt="Доходы и расходы по времени">
+
+    <h2>Расходы по категориям</h2>
+    <img src="{{ url_for('static', filename='expenses_by_category.png') }}" alt="Расходы по категориям">
+
+    <h2>Топ расходов</h2>
+    <img src="{{ url_for('static', filename='top_expenses.png') }}" alt="Топ расходов">
+
+    <a href="{{ url_for('index') }}">На главную</a>
+</body>
+</html>

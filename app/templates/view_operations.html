@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Просмотр операций</title>
+</head>
+<body>
+    <h1>Последние операции</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Сумма</th>
+                <th>Категория</th>
+                <th>Дата</th>
+                <th>Тип операции</th>
+                <th>Комментарий</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for operation in operations %}
+                <tr>
+                    <td>{{ operation[0] }}</td>
+                    <td>{{ operation[1] }}</td>
+                    <td>{{ operation[2] }}</td>
+                    <td>{{ operation[3] }}</td>
+                    <td>{{ operation[4] }}</td>
+                    <td>{{ operation[5] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('index') }}">На главную</a>
+</body>
+</html>

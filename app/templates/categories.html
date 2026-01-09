@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Управление категориями</title>
+</head>
+<body>
+    <h1>Управление категориями</h1>
+    <form method="POST">
+        <label>Новая категория: <input type="text" name="name" required></label>
+        <label>Тип:
+            <select name="type">
+                <option value="доход">Доход</option>
+                <option value="расход">Расход</option>
+            </select>
+        </label>
+        <button type="submit" name="add">Добавить</button>
+    </form>
+    <h2>Список категорий</h2>
+    <ul>
+        {% for category in categories %}
+            <li>[{{ category[2] }}] {{ category[1] }}</li>
+        {% endfor %}
+    </ul>
+    <form method="POST">
+        <label>Обновить категорию:
+            <select name="category_id">
+                {% for category in categories %}
+                    <option value="{{ category[0] }}">{{ category[1] }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>Новое название: <input type="text" name="new_name" required></label>
+        <label>Новый тип:
+            <select name="new_type">
+                <option value="доход">Доход</option>
+                <option value="расход">Расход</option>
+            </select>
+        </label>
+        <button type="submit" name="update">Обновить</button>
+    </form>
+    <h3>Импорт/экспорт категорий</h3>
+    <form method="POST" action="{{ url_for('load_categories_csv') }}" enctype="multipart/form-data">
+        <label>Загрузить категории из CSV: <input type="file" name="file" accept=".csv" required></label>
+        <button type="submit">Загрузить</button>
+    </form>
+    <form method="GET" action="{{ url_for('export_categories_csv') }}">
+        <button type="submit">Выгрузить категории в CSV</button>
+    </form>
+</body>
+</html>
