@@ -10,7 +10,8 @@ def init_routes(app):
     @app.route("/")
     def index():
         balance = analysis.get_balance()
-        return render_template("index.html", balance=balance)
+        operations = storage.get_operations()
+        return render_template("index.html", balance=balance, operations=operations)
 
     @app.route("/add_operation", methods=["GET", "POST"])
     def add_operation():
@@ -34,7 +35,7 @@ def init_routes(app):
 
     @app.route("/view_operations")
     def view_operations():
-        operations = storage.get_operations()
+        operations = storage.get_operations(limit=2000)
         return render_template("view_operations.html", operations=operations)
 
     @app.route("/categories", methods=["GET", "POST"])

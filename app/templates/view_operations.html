@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Просмотр операций</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Просмотр операций{% endblock %}
+{% block content %}
     <h1>Последние операции</h1>
     <table border="1">
         <thead>
@@ -30,6 +26,13 @@
             {% endfor %}
         </tbody>
     </table>
+    <h3>Импорт/экспорт операций</h3>
+    <form method="POST" action="{{ url_for('load_operations_csv') }}" enctype="multipart/form-data">
+        <label>Загрузить операции из CSV: <input type="file" name="file" accept=".csv" required></label>
+        <button type="submit">Загрузить</button>
+    </form>
+    <form method="GET" action="{{ url_for('export_operations_csv') }}">
+        <button type="submit">Выгрузить операции в CSV</button>
+    </form>
     <a href="{{ url_for('index') }}">На главную</a>
-</body>
-</html>
+    {% endblock %}

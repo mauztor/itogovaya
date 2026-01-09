@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Управление категориями</title>
-</head>
-<body>
+    {% extends "base.html" %}
+    {% block title %}Управление категориями  {% endblock %}
+    {% block content %}
     <h1>Управление категориями</h1>
     <form method="POST">
         <label>Новая категория: <input type="text" name="name" required></label>
@@ -47,5 +43,4 @@
     <form method="GET" action="{{ url_for('export_categories_csv') }}">
         <button type="submit">Выгрузить категории в CSV</button>
     </form>
-</body>
-</html>
+    {% endblock %}

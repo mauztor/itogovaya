@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Добавить операцию</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Добавить операцию{% endblock %}
+{% block content %}
     <h1>Добавить операцию</h1>
     <form method="POST">
         <label>Сумма: <input type="number" name="amount" required></label><br>
@@ -32,5 +28,4 @@
         <label>Комментарий: <input type="text" name="comment"></label><br>
         <button type="submit">Добавить</button>
     </form>
-</body>
-</html>
+{% endblock %}

@@ -1,7 +1,11 @@
 import sqlite3
 import pandas as pd
+import matplotlib
 import matplotlib.pyplot as plt
 import os
+
+# Указываем использование неинтерактивного бэкенда
+matplotlib.use("Agg")
 
 class FinancialAnalysis:
     def __init__(self, db_name="data/tables.db"):
