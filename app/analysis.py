@@ -1,11 +1,9 @@
 import sqlite3
 import pandas as pd
-import matplotlib
 import matplotlib.pyplot as plt
-import os
-
-# Указываем использование неинтерактивного бэкенда
-matplotlib.use("Agg")
+from matplotlib.figure import Figure
+from io import BytesIO
+import base64
 
 class FinancialAnalysis:
     def __init__(self, db_name="data/tables.db"):
@@ -47,55 +45,62 @@ class FinancialAnalysis:
             """, conn, params=(n,))
         return df
 
-    def plot_expenses_by_category(self, output_path):
-        """График расходов по категориям"""
+    def _fig_to_html(self, fig):
+        """Конвертирует объект Figure в HTML-тег <img> с изображением в формате base64."""
+        buf = BytesIO()
+        fig.savefig(buf, format="png")
+        data = base64.b64encode(buf.getbuffer()).decode("ascii")
+        return f"<img src='data:image/png;base64,{data}'/>"
+
+    def plot_expenses_by_category(self):
+        """График расходов по категориям в виде HTML-тега <img>"""
         df = self.get_category_summary()
         if df.empty:
-            return None
-        plt.figure(figsize=(8, 6))
-        plt.bar(df["name"], df["total"])
-        plt.title("Расходы по категориям")
-        plt.xlabel("Категория")
-        plt.ylabel("Сумма")
-        plt.xticks(rotation=45)
-        plt.tight_layout()
-        plt.savefig(output_path)
-        plt.close()
+            return "Нет данных"
+        fig = Figure(figsize=(8, 6))
+        ax = fig.subplots()
+        ax.bar(df["name"], df["total"])
+        ax.set_title("Расходы по категориям")
+        ax.set_xlabel("Категория")
+        ax.set_ylabel("Сумма")
+        plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
+        fig.tight_layout()
+        return self._fig_to_html(fig)
 
-    def plot_top_expenses(self, output_path):
-        """График топовых расходов"""
+    def plot_top_expenses(self):
+        """График топовых расходов в виде HTML-тега <img>"""
         df = self.get_top_expenses()
         if df.empty:
-            return None
-        plt.figure(figsize=(8, 6))
-        plt.bar(df["name"], df["amount"])
-        plt.title("Топ расходов")
-        plt.xlabel("Категория")
-        plt.ylabel("Сумма")
-        plt.xticks(rotation=45)
-        plt.tight_layout()
-        plt.savefig(output_path)
-        plt.close()
+            return "Нет данных"
+        fig = Figure(figsize=(8, 6))
+        ax = fig.subplots()
+        ax.bar(df["name"], df["amount"])
+        ax.set_title("Топ расходов")
+        ax.set_xlabel("Категория")
+        ax.set_ylabel("Сумма")
+        plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
+        fig.tight_layout()
+        return self._fig_to_html(fig)
 
-    def plot_income_vs_expenses(self, output_path):
-        """График доходов и расходов"""
+    def plot_income_vs_expenses(self):
+        """График доходов и расходов в виде HTML-тега <img>"""
         with sqlite3.connect(self.db_name) as conn:
             df = pd.read_sql("""
                 SELECT o.date, o.amount, o.operation_type
                 FROM operations o
             """, conn)
         if df.empty:
-            return None
+            return "Нет данных"
         income_df = df[df["operation_type"] == "доход"].groupby("date").sum()
         expense_df = df[df["operation_type"] == "расход"].groupby("date").sum()
-        plt.figure(figsize=(10, 6))
-        plt.plot(income_df.index, income_df["amount"], label="Доходы")
-        plt.plot(expense_df.index, expense_df["amount"], label="Расходы")
-        plt.title("Доходы и расходы по времени")
-        plt.xlabel("Дата")
-        plt.ylabel("Сумма")
-        plt.legend()
-        plt.xticks(rotation=45)
-        plt.tight_layout()
-        plt.savefig(output_path)
-        plt.close()
+        fig = Figure(figsize=(10, 6))
+        ax = fig.subplots()
+        ax.plot(income_df.index, income_df["amount"], label="Доходы")
+        ax.plot(expense_df.index, expense_df["amount"], label="Расходы")
+        ax.set_title("Доходы и расходы по времени")
+        ax.set_xlabel("Дата")
+        ax.set_ylabel("Сумма")
+        ax.legend()
+        plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
+        fig.tight_layout()
+        return self._fig_to_html(fig)

@@ -3,12 +3,8 @@
 {% block title %}Система учёта расходов и доходов текущего и капитального ремонта жилой недвижимости{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <p>Текущий баланс: {{ balance }}</p>
-    <h1 class="h2">Динамика счёта</h1>
+    <h1 class="h2">Текущий баланс: {{ balance }}</h1>
   </div>
-
-  <canvas class="my-4 w-100" id="myChart" width="900" height="150"></canvas>
-
   <h2>Последние операции</h2>
   <div class="table-responsive">
     <table class="table table-striped table-sm">

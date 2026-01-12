@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, send_file
+from .utils import validate_amount, format_date
 import os
 from app.storage import Storage
 from app.analysis import FinancialAnalysis
@@ -16,9 +17,16 @@ def init_routes(app):
     @app.route("/add_operation", methods=["GET", "POST"])
     def add_operation():
         if request.method == "POST":
-            amount = float(request.form["amount"])
+            try:
+                amount = float(request.form["amount"])
+                validate_amount(amount)  # Проверяем сумму
+            except ValueError as e:
+                return str(e), 400  # Возвращаем ошибку, если сумма некорректна
             category_id = int(request.form["category_id"])
-            date = request.form["date"]
+            try:
+                date = format_date(request.form["date"])  # Преобразуем дату
+            except ValueError as e:
+                return str(e), 400  # Возвращаем ошибку, если дата некорректна
             operation_type = request.form["operation_type"]
             comment = request.form["comment"]
             storage.add_operation({
@@ -63,7 +71,11 @@ def init_routes(app):
         if file.filename == "":
             return "Файл не выбран", 400
         if file and file.filename.endswith(".csv"):
-            storage.load_categories_from_csv(file)
+            # Сохраняем файл на диск
+            file_path = os.path.join(app.static_folder, "uploaded_categories.csv")
+            file.save(file_path)
+            # Передаем путь к файлу в функцию
+            storage.load_categories_from_csv(file_path)
             return redirect(url_for("categories"))
         return "Некорректный формат файла", 400
 
@@ -83,7 +95,13 @@ def init_routes(app):
         if file.filename == "":
             return "Файл не выбран", 400
         if file and file.filename.endswith(".csv"):
-            storage.load_operations_from_csv(file)
+            # Вариант 1: Передача данных из памяти
+            #data = file.read().decode("utf-8")
+            #storage.load_operations_from_csv(data)
+            # Вариант 2: Сохранение файла на диск
+            file_path = os.path.join(app.static_folder, "uploaded_operations.csv")
+            file.save(file_path)
+            storage.load_operations_from_csv(file_path)
             return redirect(url_for("index"))
         return "Некорректный формат файла", 400
 
@@ -97,13 +115,6 @@ def init_routes(app):
     @app.route("/analysis")
     def show_analysis():
         analysis = FinancialAnalysis()
-        # Генерация графиков и сохранение их в статические файлы
-        plot_paths = {
-            "expenses_by_category": os.path.join(app.static_folder, "expenses_by_category.png"),
-            "top_expenses": os.path.join(app.static_folder, "top_expenses.png"),
-            "income_vs_expenses": os.path.join(app.static_folder, "income_vs_expenses.png"),
-        }
-        analysis.plot_expenses_by_category(plot_paths["expenses_by_category"])
-        analysis.plot_top_expenses(plot_paths["top_expenses"])
-        analysis.plot_income_vs_expenses(plot_paths["income_vs_expenses"])
-        return render_template("analysis.html", plot_paths=plot_paths)
+        expenses_chart_html = analysis.plot_expenses_by_category()
+        income_vs_expenses_html = analysis.plot_income_vs_expenses()
+        return render_template("analysis.html", expenses_chart=expenses_chart_html, income_vs_expenses_chart=income_vs_expenses_html)

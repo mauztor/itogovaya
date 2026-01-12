@@ -2,6 +2,7 @@ import sqlite3
 import csv
 import os
 from datetime import datetime
+from .utils import validate_amount, format_date
 
 class Storage:
     def __init__(self, db_name="data/tables.db"):
@@ -12,6 +13,7 @@ class Storage:
     def _ensure_db_exists(self):
         """Проверка наличия файла базы данных. Если файла нет, создаём его."""
         if not os.path.exists(self.db_name):
+            os.makedirs(os.path.dirname(self.db_name), exist_ok=True)  # Создаем папку, если её нет
             open(self.db_name, "w").close()
 
     def _create_tables(self):
@@ -40,8 +42,14 @@ class Storage:
             """)
             conn.commit()
 
+    def _ensure_db_and_tables(self):
+        """Проверка наличия базы данных и таблиц, если их нет — создание."""
+        self._ensure_db_exists()
+        self._create_tables()
+
     def add_category(self, name, category_type):
         """Добавление категории"""
+        self._ensure_db_and_tables()
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute("""
@@ -52,6 +60,7 @@ class Storage:
 
     def get_categories(self, category_type=None):
         """Получение категорий"""
+        self._ensure_db_and_tables()
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             if category_type:
@@ -65,6 +74,7 @@ class Storage:
 
     def update_category(self, category_id, new_name, new_type):
         """Обновление категории"""
+        self._ensure_db_and_tables()
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute("""
@@ -76,6 +86,9 @@ class Storage:
 
     def add_operation(self, operation):
         """Добавление финансовой операции"""
+        self._ensure_db_and_tables()
+        validate_amount(operation["amount"]) 
+        operation["date"] = format_date(operation["date"]) 
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute("""
@@ -92,6 +105,7 @@ class Storage:
 
     def get_operations(self, limit=20):
         """Получение последних операций"""
+        self._ensure_db_and_tables()
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute("""
@@ -105,23 +119,24 @@ class Storage:
 
     def delete_operation(self, operation_id):
         """Удаление операции по ID"""
+        self._ensure_db_and_tables()
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute("DELETE FROM operations WHERE id = ?", (operation_id,))
             conn.commit()
 
-     # Загрузка категорий из CSV
     def load_categories_from_csv(self, file_path):
         """Загрузка категорий из CSV-файла"""
+        self._ensure_db_and_tables()
         with open(file_path, "r", encoding="utf-8") as file:
             reader = csv.reader(file)
             next(reader)  # Пропускаем заголовок
             for row in reader:
                 self.add_category(row[0], row[1])
 
-    # Выгрузка категорий в CSV
     def export_categories_to_csv(self, file_path):
         """Выгрузка категорий в CSV-файл"""
+        self._ensure_db_and_tables()
         categories = self.get_categories()
         with open(file_path, "w", encoding="utf-8", newline="") as file:
             writer = csv.writer(file)
@@ -129,9 +144,9 @@ class Storage:
             for category in categories:
                 writer.writerow([category[1], category[2]])
 
-    # Загрузка операций из CSV
     def load_operations_from_csv(self, file_path):
         """Загрузка операций из CSV-файла"""
+        self._ensure_db_and_tables()
         with open(file_path, "r", encoding="utf-8") as file:
             reader = csv.reader(file)
             next(reader)  # Пропускаем заголовок
@@ -144,9 +159,9 @@ class Storage:
                     "comment": row[4]
                 })
 
-    # Выгрузка операций в CSV
     def export_operations_to_csv(self, file_path):
         """Выгрузка операций в CSV-файл"""
+        self._ensure_db_and_tables()
         operations = self.get_operations()
         with open(file_path, "w", encoding="utf-8", newline="") as file:
             writer = csv.writer(file)

@@ -3,12 +3,10 @@
     {% block content %}
     <h1>Анализ финансовых данных</h1>
 
-    <h2>Доходы и расходы по времени</h2>
-    <img src="{{ url_for('static', filename='income_vs_expenses.png') }}" alt="Доходы и расходы по времени">
+    <h2>Доходы и расходы</h2>
+    {{ income_vs_expenses_chart|safe }}
 
     <h2>Расходы по категориям</h2>
-    <img src="{{ url_for('static', filename='expenses_by_category.png') }}" alt="Расходы по категориям">
+    {{ expenses_chart|safe }}
 
-    <h2>Топ расходов</h2>
-    <img src="{{ url_for('static', filename='top_expenses.png') }}" alt="Топ расходов">
     {% endblock %}
