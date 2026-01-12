@@ -29,11 +29,11 @@
     </table>
     <h3>Импорт/экспорт операций</h3>
     <form method="POST" action="{{ url_for('load_operations_csv') }}" enctype="multipart/form-data">
-        <label>Загрузить операции из CSV: <input type="file" name="file" accept=".csv" required></label>
-        <button type="submit">Загрузить</button>
+        <label class="form-label">Загрузить операции из CSV: <input type="file" name="file" accept=".csv" required class="form-control"></label>
+        <button type="submit" class="btn btn-success">Загрузить</button>
     </form>
     <form method="GET" action="{{ url_for('export_operations_csv') }}">
-        <button type="submit">Выгрузить операции в CSV</button>
+        <button type="submit" class="btn btn-primary">Выгрузить операции в CSV</button>
     </form>
    </div>
     {% endblock %}

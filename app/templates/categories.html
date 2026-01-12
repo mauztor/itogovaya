@@ -3,14 +3,14 @@
     {% block content %}
     <h1>Управление категориями</h1>
     <form method="POST">
-        <label>Новая категория: <input type="text" name="name" required></label>
-        <label>Тип:
-            <select name="type">
+        <label class="form-label">Новая категория: <input type="text" name="name" required class="form-control" ></label>
+        <label class="form-label">Тип:
+            <select name="type" class="form-select"  >
                 <option value="доход">Доход</option>
                 <option value="расход">Расход</option>
             </select>
         </label>
-        <button type="submit" name="add">Добавить</button>
+        <button type="submit" name="add" class="btn btn-primary">Добавить</button>
     </form>
     <h2>Список категорий</h2>
     <ul>
@@ -19,28 +19,28 @@
         {% endfor %}
     </ul>
     <form method="POST">
-        <label>Обновить категорию:
-            <select name="category_id">
+        <label class="form-label">Обновить категорию:
+            <select name="category_id" class="form-select"  >
                 {% for category in categories %}
                     <option value="{{ category[0] }}">{{ category[1] }}</option>
                 {% endfor %}
             </select>
         </label>
-        <label>Новое название: <input type="text" name="new_name" required></label>
-        <label>Новый тип:
-            <select name="new_type">
+        <label class="form-label">Новое название: <input type="text" name="new_name" required class="form-control" ></label>
+        <label class="form-label">Новый тип:
+            <select name="new_type" class="form-select"  >
                 <option value="доход">Доход</option>
                 <option value="расход">Расход</option>
             </select>
         </label>
-        <button type="submit" name="update">Обновить</button>
+        <button type="submit" name="update" class="btn btn-success">Обновить</button>
     </form>
     <h3>Импорт/экспорт категорий</h3>
     <form method="POST" action="{{ url_for('load_categories_csv') }}" enctype="multipart/form-data">
-        <label>Загрузить категории из CSV: <input type="file" name="file" accept=".csv" required></label>
-        <button type="submit">Загрузить</button>
+        <label class="form-label">Загрузить категории из CSV: <input type="file" name="file" accept=".csv" required class="form-control" ></label>
+        <button type="submit" class="btn btn-success">Загрузить</button>
     </form>
     <form method="GET" action="{{ url_for('export_categories_csv') }}">
-        <button type="submit">Выгрузить категории в CSV</button>
+        <button type="submit" class="btn btn-primary">Выгрузить категории в CSV</button>
     </form>
     {% endblock %}

@@ -5,8 +5,13 @@
 
     <h2>Доходы и расходы</h2>
     {{ income_vs_expenses_chart|safe }}
-
+    <hr>
     <h2>Расходы по категориям</h2>
     {{ expenses_chart|safe }}
-
+    <hr>
+    <h2>Доходы по категориям</h2>
+    {{ incomes_chart|safe }}
+    <hr>
+    <h2>Топ 10 расходов и доходов</h5>
+    {{ top_expenses_incomes_chart|safe }}
     {% endblock %}

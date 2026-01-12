@@ -114,7 +114,12 @@ def init_routes(app):
 
     @app.route("/analysis")
     def show_analysis():
-        analysis = FinancialAnalysis()
-        expenses_chart_html = analysis.plot_expenses_by_category()
-        income_vs_expenses_html = analysis.plot_income_vs_expenses()
-        return render_template("analysis.html", expenses_chart=expenses_chart_html, income_vs_expenses_chart=income_vs_expenses_html)
+        expenses_chart = analysis.plot_expenses_by_category()
+        incomes_chart = analysis.plot_incomes_by_category()
+        top_expenses_incomes_chart = analysis.plot_top_expenses_and_incomes()
+        income_vs_expenses_chart = analysis.plot_income_vs_expenses()
+        return render_template("analysis.html", 
+                           expenses_chart=expenses_chart, 
+                           incomes_chart=incomes_chart,
+                           top_expenses_incomes_chart=top_expenses_incomes_chart,
+                           income_vs_expenses_chart=income_vs_expenses_chart)

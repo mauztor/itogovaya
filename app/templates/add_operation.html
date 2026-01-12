@@ -3,9 +3,9 @@
 {% block content %}
     <h1>Добавить операцию</h1>
     <form method="POST">
-        <label>Сумма: <input type="number" name="amount" required></label><br>
-        <label>Категория:
-            <select name="category_id" required>
+        <label class="form-label">Сумма: <input type="number" name="amount" required class="form-control" ></label><br>
+        <label class="form-label">Категория:
+            <select name="category_id" required class="form-select"  >
                 <optgroup label="Доходы">
                     {% for category in income_categories %}
                         <option value="{{ category[0] }}">{{ category[1] }}</option>
@@ -18,14 +18,14 @@
                 </optgroup>
             </select>
         </label><br>
-        <label>Дата: <input type="datetime-local" name="date" required></label><br>
-        <label>Тип операции:
-            <select name="operation_type">
+        <label class="form-label">Дата: <input type="datetime-local" name="date" required class="form-control" ></label><br>
+        <label class="form-label">Тип операции:
+            <select name="operation_type" class="form-select"  >
                 <option value="доход">Доход</option>
                 <option value="расход">Расход</option>
             </select>
         </label><br>
-        <label>Комментарий: <input type="text" name="comment"></label><br>
-        <button type="submit">Добавить</button>
+        <label class="form-label">Комментарий: <input type="text" name="comment" class="form-control" ></label><br>
+        <button type="submit" class="btn btn-primary">Добавить</button>
     </form>
 {% endblock %}
