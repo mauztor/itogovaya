@@ -2,3 +2,5 @@ Flask
 pandas
 matplotlib
 sqlite3
+base64
+BytesIO
